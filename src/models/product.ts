@@ -5,9 +5,11 @@ export interface Product {
   price: number;
   imageUrl: string;
   quantity: number;
-}
-
-export interface Stock {
-  id: string;
-  quantity: number;
+  priceTags: [
+    {
+      value: number;
+      rawValue: number;
+      isPercentual: false;
+    }
+  ];
 }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FiShoppingCart, FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 import { Container, Cart, BackPage } from './styles';
 import { useCart } from '../../hooks/useCart';
@@ -16,15 +16,14 @@ const Header = (): JSX.Element => {
         </Link>
       </BackPage>
 
-
       <Cart to="/cart">
         <div>
-          <strong>Meu carrinho</strong>
+          <strong>Ver meu carrinho</strong>
           <span data-testid="cart-size">
             {cartSize === 1 ? `${cartSize} item` : `${cartSize} itens`}
           </span>
         </div>
-        <FiShoppingCart size={20} color="#000" />
+        <FiArrowRight size={20} color="#000" />
       </Cart>
     </Container>
   );

@@ -1,24 +1,10 @@
+import { toast } from 'react-toastify';
 import { useCart } from '../../hooks/useCart';
+import { Product } from '../../models/product';
 import { formatPrice } from '../../util/format';
 import { Container, Image, ProductTable, Total, Title, Footer, FreeShipping, ContentButton } from './styles';
 
-interface Product {
-  id: string;
-  productId: string;
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-  priceTags: [
-    {
-      value: number,
-      rawValue: number,
-      isPercentual: false,
-    }
-  ],
-
-}
-
+const minimumAmountForFreeShipping = 10; //VALOR MINIMO PARA APLICA FRETE GRÀTIS
 interface CartFormatted extends Product {
   priceFormatted: string;
   totalFormatted: string;
@@ -37,13 +23,20 @@ const Cart = (): JSX.Element => {
     return sumTotal += product.price * product.quantity
   }, 0);
 
+  const handleSuccessfulPurchase = (): void => {
+    if (!cartFormatted.length) {
+      toast.error('Carrinho esta vazio!')
+    } else {
+      toast.success('Compra realizada com sucesso!')
+    }
+  }
+
   return (
     <Container>
       <Title>Meu carrinho</Title>
       <ProductTable>
         <tbody>
-          {cartFormatted.map((product, index) => {
-            const discountValue = product.priceTags.map((e => e.value));
+          {cartFormatted.map((product, _) => {
             return (
               <tr data-testid="product" key={product.id}>
                 <td>
@@ -51,7 +44,6 @@ const Cart = (): JSX.Element => {
                 </td>
                 <td>
                   <strong>{product.name}</strong>
-                  {/* <span>{Number(product.priceFormatted) - discountValue[index] / 100}</span> */}
                   <span>{product.priceFormatted}</span>
                 </td>
               </tr>
@@ -66,10 +58,12 @@ const Cart = (): JSX.Element => {
           <strong>{formatPrice(total)}</strong>
         </Total>
         {
-          Number(total) > 10 ? <FreeShipping>Parabéns, sua compra tem frete grátis!</FreeShipping> : null
+          Number(total) > minimumAmountForFreeShipping ?
+            <FreeShipping>Parabéns, sua compra tem frete grátis!</FreeShipping>
+            : null
         }
       </Footer>
-      <ContentButton>
+      <ContentButton onClick={handleSuccessfulPurchase}>
         <button type="button">Finalizar pedido</button>
       </ContentButton>
     </Container>
